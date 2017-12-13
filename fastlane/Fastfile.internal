@@ -17,11 +17,10 @@ lane :tests do
 end
 
 lane :run_rubocop do |opts|
-  command = %w(bundle exec rubocop)
-  command << "-a" if opts[:correct]
-  # Why?
-  Dir.chdir("..") do
-    sh *command
+  if opts[:correct]
+    rake task: "rubocop:auto_correct"
+  else
+    rake task: :rubocop
   end
 end
 
