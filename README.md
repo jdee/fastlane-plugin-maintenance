@@ -12,9 +12,19 @@ fastlane add_plugin maintenance
 
 ## About maintenance
 
-Maintenance actions for plugin repos.
+Maintenance actions for plugin repos. May be run as standalone actions from the
+command line.
 
-**Note to author:** Add a more detailed description about this plugin here. If your plugin contains multiple actions, make sure to mention them here.
+### update_rubocop action
+
+```bash
+bundle exec fastlane run update_rubocop
+```
+
+Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if
+necessary. Runs rubocop -a to auto-correct many offenses. Adjusts TargetRubyVersion.
+Automatically corrects namespace changes. Disables any remaining failing Cops in your
+.rubocop.yml with a TODO note. Run from the command line with no arguments.
 
 ## Example
 
