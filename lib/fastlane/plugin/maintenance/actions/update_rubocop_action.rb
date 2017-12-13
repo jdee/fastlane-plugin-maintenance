@@ -9,6 +9,11 @@ module Fastlane
     class UpdateRubocopAction < Action
       class << self
         def run(params)
+          unless Gem::Version.new(Fastlane::VERSION) >= Gem::Version.new("2.69.0")
+            UI.important "This action requires fastlane >= 2.69.0."
+            return false
+          end
+
           spec = latest_rubocop_gemspec
           UI.message "Latest: #{spec.name} #{spec.version}"
           requirement = rubocop_requirement_from_repo
@@ -23,13 +28,21 @@ module Fastlane
           run_rubocop
         end
 
-        def available_options
-          [
-          ]
+        def description
+          "Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if " \
+          "necessary. Runs rubocop -a to auto-correct many offenses. Automatically corrects namespace " \
+          "changes. Disables any remaining failing Cops in your .rubocop.yml with a TODO note. Run " \
+          "from the command line with no arguments."
         end
 
-        def description
-          "More to come"
+        def authors
+          ["Jimmy Dee"]
+        end
+
+        def example_code
+          [
+            "bundle exec fastlane run update_rubocop"
+          ]
         end
 
         def latest_rubocop_gemspec
@@ -149,14 +162,13 @@ module Fastlane
             UI.important cop
           end
 
-          insertion = "#\n# TODO: Review these failing cops, adjust code and re-enable as necessary.\n#\n\n"
-          @failing_cops.each do |c|
-            insertion << "#{c}:\n  Enabled: false\n"
-          end
-          insertion << "\n"
+          insertion = "# --- update_rubocop ---\n"
+          insertion << "# TODO: Review these failing cops, adjust code and re-enable as necessary.\n\n"
+          insertion << @failing_cops.map { |c| "#{c}:\n  Enabled: false\n" }.join("\n")
+          insertion << "# --- update_rubocop ---\n\n"
 
           PatternPatch::Patch.new(
-            regexp: /\A/m,
+            regexp: /\A/,
             text: insertion,
             mode: :prepend
           ).apply ".rubocop.yml"
