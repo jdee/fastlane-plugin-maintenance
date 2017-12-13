@@ -13,12 +13,20 @@ fastlane add_plugin maintenance
 ## About maintenance
 
 Maintenance actions for plugin repos. May be run as standalone actions from the
-command line.
+command line. These actions take no parameters.
+
+### release_plugin action
+
+```bash
+release_plugin
+```
+
+Release your plugin to RubyGems using rake release.
 
 ### update_rubocop action
 
 ```bash
-bundle exec fastlane run update_rubocop
+update_rubocop
 ```
 
 Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if

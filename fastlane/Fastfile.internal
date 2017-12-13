@@ -1,0 +1,7 @@
+lane :release do
+  rake task: :release
+end
+
+lane :rubocop_update do
+  update_rubocop
+end
