@@ -118,15 +118,16 @@ module Fastlane
             disable_failing_cops
           end
 
-          UI.message "3. Running rubocop to verify changes. This should pass."
-          sh "bundle exec rubocop", print_command_output: false do |status, output, command|
+          UI.message "3. Running rubocop --auto-correct to verify changes. This should pass."
+          sh "bundle exec rubocop --auto-correct", print_command_output: false do |status, output, command|
             if status.success?
               UI.success "Done ✅"
               return
             end
 
+            UI.important "rubocop still detects offenses. These have to be fixed manually."
             output.split("\n").each do |line|
-              UI.important line
+              UI.message line
             end
           end
 
@@ -165,7 +166,7 @@ module Fastlane
           UI.message ""
           UI.important "Temporarily disabling the following cops in .rubocop.yml"
           @failing_cops.each do |cop|
-            UI.important cop
+            UI.important " #{cop}"
           end
 
           insertion = "# --- update_rubocop ---\n"
@@ -183,7 +184,7 @@ module Fastlane
         def adjust_target_ruby_version
           rubocop_config = YAML.load_file ".rubocop.yml"
           versions = rubocop_config.map { |k, v| v['TargetRubyVersion'] }.compact.map(&:to_f).uniq
-          return if versions.all? { |v| v >= 2.1 }
+          return unless versions.any? { |v| v < 2.1 }
 
           version = [versions.max, 2.1].max
 
