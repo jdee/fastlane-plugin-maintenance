@@ -11,7 +11,10 @@ end
 lane :run_rubocop do |opts|
   command = %w(bundle exec rubocop)
   command << "-a" if opts[:correct]
-  sh *command
+  # Why?
+  Dir.chdir("..") do
+    sh *command
+  end
 end
 
 lane :rubocop_update do
