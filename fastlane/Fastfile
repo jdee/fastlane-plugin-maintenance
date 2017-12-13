@@ -1,5 +1,3 @@
 fastlane_version "2.69.0"
 
-lane :test do
-  update_rubocop
-end
+import "Fastfile.internal"

@@ -1,0 +1,19 @@
+# General-purpose Fastfile.internal for plugin maintenance
+
+lane :release do
+  rake task: :release
+end
+
+lane :plugin_tests do
+  rake task: :default
+end
+
+lane :run_rubocop do |opts|
+  command = %w(bundle exec rubocop)
+  command << "-a" if opts[:correct]
+  sh *command
+end
+
+lane :rubocop_update do
+  update_rubocop
+end

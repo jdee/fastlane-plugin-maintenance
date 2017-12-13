@@ -12,13 +12,34 @@ fastlane add_plugin maintenance
 
 ## About maintenance
 
-Maintenance actions for plugin repos. May be run as standalone actions from the
-command line.
+Maintenance actions for plugin repos.
+
+### rake action
+
+```bash
+rake task: :release
+```
+
+```bash
+rake task: :default
+```
+
+```bash
+rake task: :default, rakefile: "Rakefile"
+```
+
+General-purpose rake action to build tasks from a Rakefile.
+
+|Parameter|Description|
+|---------|-----------|
+|task|The task to build. Symbol or String.|
+|rakefile|The Rakefile to use. Defaults to "Rakefile"|
+|options|Options for the task. Pass an array for multiple options.|
 
 ### update_rubocop action
 
 ```bash
-bundle exec fastlane run update_rubocop
+update_rubocop
 ```
 
 Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if
