@@ -1,8 +1,11 @@
+require "fastlane/action"
+
 require "active_support/core_ext/array"
 require "active_support/core_ext/string"
 require "pattern_patch"
 require "rubygems"
 require "set"
+require "yaml"
 
 module Fastlane
   module Actions
@@ -50,7 +53,8 @@ module Fastlane
             name_tuple.name == 'rubocop'
           end.first
 
-          name_tuple, source = spec_tuple.first, spec_tuple.second
+          name_tuple = spec_tuple.first
+          source = spec_tuple.second
           source.fetch_spec name_tuple
         end
 
@@ -60,9 +64,9 @@ module Fastlane
 
         def gemspec
           return @gemspec if @gemspec
-          # disable rubocop: Security/Eval
+          # rubocop: disable Security/Eval
           @gemspec = eval(File.read(gemspec_path))
-          # enable rubocop: Security/Eval
+          # rubocop: enable Security/Eval
           @gemspec
         end
 
@@ -83,6 +87,8 @@ module Fastlane
         end
 
         def run_rubocop
+          adjust_target_ruby_version
+
           UI.message "1. Running rubocop --auto-correct. This may fail."
           sh "bundle exec rubocop --auto-correct", print_command_output: false do |status|
             if status.success?
@@ -171,6 +177,23 @@ module Fastlane
             regexp: /\A/,
             text: insertion,
             mode: :prepend
+          ).apply ".rubocop.yml"
+        end
+
+        def adjust_target_ruby_version
+          rubocop_config = YAML.load_file ".rubocop.yml"
+          versions = rubocop_config.map { |k, v| v['TargetRubyVersion'] }.compact.map(&:to_f).uniq
+          return if versions.all? { |v| v >= 2.1 }
+
+          version = [versions.max, 2.1].max
+
+          UI.important "Updating TargetRubyVersion to #{version}"
+
+          PatternPatch::Patch.new(
+            regexp: /(TargetRubyVersion\s*:\s*)\d\.\d(.*)$/,
+            text: "\\1#{version}\\2",
+            mode: :replace,
+            global: true
           ).apply ".rubocop.yml"
         end
       end
