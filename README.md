@@ -62,12 +62,12 @@ Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plu
 To run both the tests, and code style validation, run
 
 ```
-rake
+fastlane tests
 ```
 
 To automatically fix many of the styling issues, use
 ```
-rubocop -a
+fastlane run_rubocop correct:yes
 ```
 
 ## Issues and Feedback
