@@ -15,13 +15,27 @@ fastlane add_plugin maintenance
 Maintenance actions for plugin repos. May be run as standalone actions from the
 command line. These actions take no parameters.
 
-### release_plugin action
+### rake action
 
 ```bash
-release_plugin
+rake task: :release
+```
+
+```bash
+rake task: :default
+```
+
+```bash
+rake task: :default, rakefile: "Rakefile"
 ```
 
 Release your plugin to RubyGems using rake release.
+
+|Parameter|Description|
+|---------|-----------|
+|task|The task to build. Symbol or String.|
+|rakefile|The Rakefile to use. Defaults to "Rakefile"|
+|options|Options for the task. Pass an array for multiple options.|
 
 ### update_rubocop action
 

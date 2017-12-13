@@ -15,7 +15,16 @@ module Fastlane
             # rubocop: enable Security/Eval
           end
 
-          Rake::Task[params[:task]].invoke
+          case params[:options]
+          when Array
+            # Can pass multiple options as an array
+            args = *params[:options]
+          else
+            args = params[:options]
+          end
+
+          UI.header "rake #{params[:task]}"
+          Rake::Task[params[:task]].invoke args
         end
 
         def available_options
@@ -30,13 +39,20 @@ module Fastlane
               description: "Rakefile to use",
               type: String,
               optional: true,
-              default_value: "Rakefile"
+              default_value: "Rakefile",
+              verify_block: ->(path) { File.open(path); true }
+            ),
+            FastlaneCore::ConfigItem.new(
+              key: :options,
+              description: "Options for task",
+              is_string: false,
+              optional: true
             )
           ]
         end
 
         def description
-          "Release your plugin to RubyGems using rake release."
+          "General-purpose rake action to invoke tasks from a Rakefile or elsewhere."
         end
 
         def authors
@@ -45,7 +61,9 @@ module Fastlane
 
         def example_code
           [
-            "bundle exec fastlane run release_plugin"
+            "rake task: :release",
+            "rake task: :default",
+            %(rake task: :default, rakefile: "Rakefile")
           ]
         end
       end
