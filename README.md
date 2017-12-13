@@ -12,8 +12,7 @@ fastlane add_plugin maintenance
 
 ## About maintenance
 
-Maintenance actions for plugin repos. May be run as standalone actions from the
-command line. These actions take no parameters.
+Maintenance actions for plugin repos.
 
 ### rake action
 
@@ -29,7 +28,7 @@ rake task: :default
 rake task: :default, rakefile: "Rakefile"
 ```
 
-Release your plugin to RubyGems using rake release.
+General-purpose rake action to build tasks from a Rakefile.
 
 |Parameter|Description|
 |---------|-----------|
