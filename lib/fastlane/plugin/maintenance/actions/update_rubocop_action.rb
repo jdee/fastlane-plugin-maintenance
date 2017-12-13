@@ -90,29 +90,26 @@ module Fastlane
           adjust_target_ruby_version
 
           UI.message "1. Running rubocop --auto-correct. This may fail."
-          sh "bundle exec rubocop --auto-correct", print_command_output: false do |status|
+          sh "bundle exec rubocop --auto-correct", print_command_output: false do |status, output|
+            output.split("\n").each do |line|
+              adjust_namespace(line) if line =~ /has the wrong namespace/
+            end
+
             if status.success?
               UI.success "Done ✅"
               return
             end
           end
 
-          UI.message "2. Running rubocop --display-cop-names for further automated fixes. This may fail."
+          UI.message "2. Running rubocop --display-cop-names to disable failing cops. This may fail."
           sh "bundle exec rubocop --display-cop-names", print_command_output: false do |status, output, command|
             if status.success?
               UI.success "Done ✅"
               return
             end
 
-            UI.message "Adjusting changed namespaces and disabling failing cops."
-
             output.split("\n").each do |line|
-              case line
-              when /has the wrong namespace/
-                adjust_namespace line
-              else
-                add_failing_cop line
-              end
+              add_failing_cop line
             end
 
             disable_failing_cops
