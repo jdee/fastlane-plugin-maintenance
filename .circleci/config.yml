@@ -33,7 +33,7 @@ jobs:
       # run tests!
       - run:
           name: run tests
-          command: bundle exec rake
+          command: bundle exec fastlane tests
 
       # collect reports
       - store_test_results:
