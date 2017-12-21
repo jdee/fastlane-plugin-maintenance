@@ -32,10 +32,14 @@ module Fastlane
         end
 
         def description
+          "Automatically updates RuboCop to the latest version."
+        end
+
+        def details
           "Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if " \
           "necessary. Runs rubocop -a to auto-correct many offenses. Adjusts TargetRubyVersion. " \
           "Automatically corrects namespace changes. Disables any remaining failing Cops in your " \
-          ".rubocop.yml with a TODO note. Run from the command line with no arguments."
+          ".rubocop.yml with a TODO note. Can be run from the command line with no arguments."
         end
 
         def authors

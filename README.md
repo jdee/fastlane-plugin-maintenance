@@ -21,15 +21,15 @@ Maintenance actions for plugin repos.
 ### rake action
 
 ```bash
-rake task: :release
+rake(task: :release)
 ```
 
 ```bash
-rake task: :default
+rake(task: :default)
 ```
 
 ```bash
-rake task: :default, rakefile: "Rakefile"
+rake(task: :default, rakefile: "Rakefile")
 ```
 
 General-purpose rake action to build tasks from a Rakefile.
@@ -49,13 +49,27 @@ update_rubocop
 Updates rubocop to the latest version. Pins your gemspec to a new version of rubocop if
 necessary. Runs rubocop -a to auto-correct many offenses. Adjusts TargetRubyVersion.
 Automatically corrects namespace changes. Disables any remaining failing Cops in your
-.rubocop.yml with a TODO note. Run from the command line with no arguments.
+.rubocop.yml with a TODO note. Can be run from the command line with no arguments.
 
-## Example
+## Fastfile.internal
 
-Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
+Add [fastlane/Fastfile.internal](./fastlane/Fastfile.internal) to your repo's
+`Fastfile` to add the following predefined lanes for plugin maintenance:
 
-**Note to author:** Please set up a sample project to make it easy for users to explore what your plugin does. Provide everything that is necessary to try out the plugin in this project (including a sample Xcode/Android project if necessary)
+|lane|description|options|
+|----|-----------|-------|
+|release|Release plugin to RubyGems||
+|install|Install plugin gem in $GEM_HOME|local:yes to install without network access|
+|tests|Run all tests and RuboCop||
+|run_rubocop|Rub RuboCop|correct:yes to auto-correct many offenses|
+|rubocop_update|Update RuboCop to the latest version using the update_rubocop action||
+
+```Ruby
+import_from_git(
+  path: "fastlane/Fastfile.internal",
+  url: "https://github.com/jdee/fastlane-plugin-maintenance"
+)
+```
 
 ## Run tests for this plugin
 

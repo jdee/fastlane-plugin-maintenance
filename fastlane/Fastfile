@@ -1,3 +1,10 @@
 fastlane_version "2.69.0"
 
 import "Fastfile.internal"
+
+# Add this to the Fastfile in your plugin repo:
+
+# import_from_git(
+#   path: "fastlane/Fastfile.internal",
+#   url: "https://github.com/jdee/fastlane-plugin-maintenance"
+# )

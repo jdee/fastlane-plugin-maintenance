@@ -61,9 +61,9 @@ module Fastlane
 
         def example_code
           [
-            "rake task: :release",
-            "rake task: :default",
-            %(rake task: :default, rakefile: "Rakefile")
+            "rake(task: :release)",
+            "rake(task: :default)",
+            %[rake(task: :default, rakefile: "Rakefile")]
           ]
         end
       end

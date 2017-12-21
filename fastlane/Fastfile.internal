@@ -2,29 +2,29 @@
 
 desc "Release plugin to RubyGems"
 lane :release do
-  rake task: :release
+  rake(task: :release)
 end
 
 desc "Install plugin gem in $GEM_HOME"
 lane :install do |opts|
   if opts[:local]
-    rake task: "install:local"
+    rake(task: "install:local")
   else
-    rake task: :install
+    rake(task: :install)
   end
 end
 
 desc "Run rspec and rubocop"
 lane :tests do
-  rake task: :default
+  rake(task: :default)
 end
 
 desc "Run rubocop"
 lane :run_rubocop do |opts|
   if opts[:correct]
-    rake task: "rubocop:auto_correct"
+    rake(task: "rubocop:auto_correct")
   else
-    rake task: :rubocop
+    rake(task: :rubocop)
   end
 end
 
